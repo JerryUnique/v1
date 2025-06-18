@@ -1,4 +1,4 @@
-package com.example.scheduler;
+package com.example.shceduler;
 
 import com.example.scheduler.model.TaskRequest;
 import com.example.scheduler.service.TaskService;
