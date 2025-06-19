@@ -1,0 +1,53 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:taskdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  quartz:
+    job-store-type: memory
+    scheduler:
+      instanceId: AUTO
+
+# 任务调度配置
+task:
+  scheduler:
+    # 线程池配置
+    thread-pool:
+      core-size: 10
+      max-size: 20
+      queue-capacity: 100
+    
+    # 并发控制配置
+    concurrency:
+      # 数据处理任务最大并发数
+      data-processing: 3
+      # 报表生成任务最大并发数
+      report-generation: 2
+      # 文件上传任务最大并发数
+      file-upload: 5
+      # 邮件发送任务最大并发数
+      email-sending: 2
+      # 默认任务最大并发数
+      default: 1
+
+# 日志配置
+logging:
+  level:
+    com.example.scheduler: DEBUG
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
