@@ -9,5 +9,6 @@
 /workspace/TaskScheduler/src/main/java/com/example/scheduler/model/TaskExecutionLog.java
 /workspace/TaskScheduler/src/main/java/com/example/scheduler/controller/EnhancedTaskController.java
 /workspace/TaskScheduler/src/main/java/com/example/scheduler/config/QuartzConfig.java
+/workspace/TaskScheduler/src/main/java/com/example/scheduler/service/SpringTaskExecutionJob.java
 /workspace/TaskScheduler/src/main/java/com/example/scheduler/repository/TaskRepository.java
 /workspace/TaskScheduler/src/main/java/com/example/scheduler/service/TaskService.java

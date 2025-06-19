@@ -4,6 +4,7 @@ com/example/scheduler/model/TaskRequest.class
 com/example/scheduler/TaskSchedulerApplication.class
 com/example/scheduler/model/TaskStatus.class
 com/example/scheduler/service/EnhancedTaskService$SpringTaskExecutionJob.class
+com/example/scheduler/service/SpringTaskExecutionJob.class
 com/example/scheduler/model/Task.class
 com/example/scheduler/service/TaskService.class
 com/example/scheduler/controller/TaskController.class
