@@ -7,7 +7,9 @@ public class TaskRequest {
     private String taskId;
     private String taskName;
     private Instant runAt;
-    private String status; // SCHEDULED, RUNNING, COMPLETED, CANCELLED, FAILED
+    private TaskType taskType = TaskType.DEFAULT;
+    private int priority = 0; // 优先级，数值越大优先级越高
+    private TaskStatus status = TaskStatus.WAITING;
     private Instant createdAt;
     private Instant updatedAt;
     private String description;
@@ -15,7 +17,7 @@ public class TaskRequest {
     public TaskRequest() {
         this.createdAt = Instant.now();
         this.updatedAt = Instant.now();
-        this.status = "SCHEDULED";
+        this.status = TaskStatus.WAITING;
     }
 
     public String getTaskId() {
@@ -44,11 +46,11 @@ public class TaskRequest {
         this.updatedAt = Instant.now();
     }
 
-    public String getStatus() {
+    public TaskStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(TaskStatus status) {
         this.status = status;
         this.updatedAt = Instant.now();
     }
@@ -76,5 +78,21 @@ public class TaskRequest {
     public void setDescription(String description) {
         this.description = description;
         this.updatedAt = Instant.now();
+    }
+
+    public TaskType getTaskType() {
+        return taskType;
+    }
+
+    public void setTaskType(TaskType taskType) {
+        this.taskType = taskType;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 }
