@@ -11,6 +11,11 @@ public enum TaskStatus {
     WAITING("waiting", "等待调度"),
     
     /**
+     * 等待执行
+     */
+    PENDING("pending", "等待执行"),
+    
+    /**
      * 排队中
      */
     QUEUED("queued", "排队中"),
@@ -21,14 +26,24 @@ public enum TaskStatus {
     RUNNING("running", "执行中"),
     
     /**
-     * 执行完成
+     * 已完成
      */
-    COMPLETED("completed", "执行完成"),
+    COMPLETED("completed", "已完成"),
     
     /**
      * 执行失败
      */
-    FAILED("failed", "执行失败");
+    FAILED("failed", "执行失败"),
+    
+    /**
+     * 已取消
+     */
+    CANCELLED("cancelled", "已取消"),
+    
+    /**
+     * 已调度
+     */
+    SCHEDULED("scheduled", "已调度");
     
     private final String code;
     private final String description;

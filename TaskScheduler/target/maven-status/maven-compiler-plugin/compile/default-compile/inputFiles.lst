@@ -6,4 +6,12 @@
 /workspace/TaskScheduler/src/main/java/com/example/scheduler/controller/WebController.java
 /workspace/TaskScheduler/src/main/java/com/example/scheduler/controller/TaskController.java
 /workspace/TaskScheduler/src/main/java/com/example/scheduler/TaskSchedulerApplication.java
+/workspace/TaskScheduler/src/main/java/com/example/scheduler/repository/TaskExecutionLogRepository.java
+/workspace/TaskScheduler/src/main/java/com/example/scheduler/service/EnhancedTaskService.java
+/workspace/TaskScheduler/src/main/java/com/example/scheduler/model/Task.java
+/workspace/TaskScheduler/src/main/java/com/example/scheduler/model/TaskExecutionLog.java
+/workspace/TaskScheduler/src/main/java/com/example/scheduler/controller/EnhancedTaskController.java
+/workspace/TaskScheduler/src/main/java/com/example/scheduler/config/QuartzConfig.java
+/workspace/TaskScheduler/src/main/java/com/example/scheduler/service/SpringTaskExecutionJob.java
+/workspace/TaskScheduler/src/main/java/com/example/scheduler/repository/TaskRepository.java
 /workspace/TaskScheduler/src/main/java/com/example/scheduler/service/TaskService.java
