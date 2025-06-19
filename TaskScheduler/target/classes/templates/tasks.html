@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>任务管理 - 任务调度管理平台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #f5f7fa;
+            padding: 20px;
+        }
+        
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 {
+            color: #333;
+            font-size: 2em;
+        }
+        
+        .back-btn {
+            background: #6c757d;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            background: #5a6268;
+        }
+        
+        .task-form {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5a67d8;
+        }
+        
+        .btn-success {
+            background: #48bb78;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #38a169;
+        }
+        
+        .btn-danger {
+            background: #f56565;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #e53e3e;
+        }
+        
+        .task-list {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .task-list h2 {
+            padding: 20px;
+            background: #667eea;
+            color: white;
+            margin: 0;
+        }
+        
+        .task-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .task-table th,
+        .task-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .task-table th {
+            background: #f8f9fa;
+            font-weight: bold;
+        }
+        
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .status-scheduled {
+            background: #bee3f8;
+            color: #2a69ac;
+        }
+        
+        .status-running {
+            background: #fbb6ce;
+            color: #97266d;
+        }
+        
+        .status-completed {
+            background: #c6f6d5;
+            color: #276749;
+        }
+        
+        .status-cancelled {
+            background: #fed7d7;
+            color: #9b2c2c;
+        }
+        
+        .status-failed {
+            background: #fbb6ce;
+            color: #97266d;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+        }
+        
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+        }
+        
+        .close {
+            float: right;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover {
+            color: #f56565;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📋 任务管理</h1>
+        <a href="/" class="back-btn">← 返回首页</a>
+    </div>
+    
+    <div class="task-form">
+        <h3>🆕 新增任务</h3>
+        <form id="taskForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="taskName">任务名称</label>
+                    <input type="text" id="taskName" name="taskName" required>
+                </div>
+                <div class="form-group">
+                    <label for="runAt">执行时间</label>
+                    <input type="datetime-local" id="runAt" name="runAt" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="description">任务描述</label>
+                    <textarea id="description" name="description" rows="3"></textarea>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">添加任务</button>
+        </form>
+    </div>
+    
+    <div class="task-list">
+        <h2>📝 任务列表</h2>
+        <div id="taskTableContainer">
+            <div class="empty-state">
+                <p>🚀 正在加载任务列表...</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 编辑任务模态框 -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>✏️ 编辑任务</h3>
+            <form id="editTaskForm">
+                <input type="hidden" id="editTaskId">
+                <div class="form-group">
+                    <label for="editTaskName">任务名称</label>
+                    <input type="text" id="editTaskName" name="taskName" required>
+                </div>
+                <div class="form-group">
+                    <label for="editRunAt">执行时间</label>
+                    <input type="datetime-local" id="editRunAt" name="runAt" required>
+                </div>
+                <div class="form-group">
+                    <label for="editDescription">任务描述</label>
+                    <textarea id="editDescription" name="description" rows="3"></textarea>
+                </div>
+                <div style="margin-top: 20px;">
+                    <button type="submit" class="btn btn-success">保存修改</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeEditModal()">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        // 页面加载时获取任务列表
+        document.addEventListener('DOMContentLoaded', function() {
+            loadTasks();
+        });
+        
+        // 添加任务
+        document.getElementById('taskForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const taskData = {
+                taskName: formData.get('taskName'),
+                runAt: new Date(formData.get('runAt')).toISOString(),
+                description: formData.get('description')
+            };
+            
+            fetch('/api/tasks/schedule', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(taskData)
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert('任务添加成功！');
+                e.target.reset();
+                loadTasks();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('添加任务失败！');
+            });
+        });
+        
+        // 加载任务列表
+        function loadTasks() {
+            fetch('/api/tasks')
+                .then(response => response.json())
+                .then(tasks => {
+                    displayTasks(tasks);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('taskTableContainer').innerHTML = 
+                        '<div class="empty-state"><p>❌ 加载任务列表失败</p></div>';
+                });
+        }
+        
+        // 显示任务列表
+        function displayTasks(tasks) {
+            const container = document.getElementById('taskTableContainer');
+            
+            if (tasks.length === 0) {
+                container.innerHTML = '<div class="empty-state"><p>📭 暂无任务</p></div>';
+                return;
+            }
+            
+            let tableHtml = `
+                <table class="task-table">
+                    <thead>
+                        <tr>
+                            <th>任务ID</th>
+                            <th>任务名称</th>
+                            <th>执行时间</th>
+                            <th>状态</th>
+                            <th>描述</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            tasks.forEach(task => {
+                const runAt = new Date(task.runAt).toLocaleString('zh-CN');
+                const statusClass = 'status-' + task.status.toLowerCase();
+                
+                tableHtml += `
+                    <tr>
+                        <td>${task.taskId}</td>
+                        <td>${task.taskName}</td>
+                        <td>${runAt}</td>
+                        <td><span class="status-badge ${statusClass}">${task.status}</span></td>
+                        <td>${task.description || '-'}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-primary btn-sm" onclick="editTask('${task.taskId}')">编辑</button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteTask('${task.taskId}')">删除</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            tableHtml += '</tbody></table>';
+            container.innerHTML = tableHtml;
+        }
+        
+        // 编辑任务
+        function editTask(taskId) {
+            fetch(`/api/tasks/${taskId}`)
+                .then(response => response.json())
+                .then(task => {
+                    document.getElementById('editTaskId').value = task.taskId;
+                    document.getElementById('editTaskName').value = task.taskName;
+                    document.getElementById('editRunAt').value = new Date(task.runAt).toISOString().slice(0, 16);
+                    document.getElementById('editDescription').value = task.description || '';
+                    document.getElementById('editModal').style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('获取任务信息失败！');
+                });
+        }
+        
+        // 保存编辑
+        document.getElementById('editTaskForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const taskId = document.getElementById('editTaskId').value;
+            const formData = new FormData(e.target);
+            const taskData = {
+                taskName: formData.get('taskName'),
+                runAt: new Date(formData.get('runAt')).toISOString(),
+                description: formData.get('description')
+            };
+            
+            fetch(`/api/tasks/${taskId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(taskData)
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert('任务更新成功！');
+                closeEditModal();
+                loadTasks();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('更新任务失败！');
+            });
+        });
+        
+        // 删除任务
+        function deleteTask(taskId) {
+            if (confirm('确定要删除这个任务吗？')) {
+                fetch(`/api/tasks/${taskId}`, {
+                    method: 'DELETE'
+                })
+                .then(response => response.text())
+                .then(data => {
+                    alert('任务删除成功！');
+                    loadTasks();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('删除任务失败！');
+                });
+            }
+        }
+        
+        // 关闭编辑模态框
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+        
+        // 点击模态框外部关闭
+        window.onclick = function(event) {
+            const modal = document.getElementById('editModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+        
+        // 关闭按钮
+        document.querySelector('.close').onclick = function() {
+            closeEditModal();
+        }
+        
+        // 定时刷新任务列表
+        setInterval(loadTasks, 5000); // 每5秒刷新一次
+    </script>
+</body>
+</html>
